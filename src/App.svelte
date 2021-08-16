@@ -1,12 +1,12 @@
 <script>
  // import Component
  import Katex from "./Katex.svelte";
+ import Item from "./Item.svelte";
  import { onMount } from "svelte";
  let hash = {}
 
  onMount(() => {
    hash['test'] = document.querySelectorAll(`.test`)
-   console.log(hash['test'].length)
 
    Object.values(hash).forEach(nodes => {
      nodes.forEach(node => {
@@ -16,41 +16,95 @@
    })
  })
 
-  // Math equations
+ // Math Equations
+ let partial_strain = `
+\\begin{align}
+\\epsilon_{x} = \\frac{\\partial u_x}{\\partial x} \\qquad
+\\epsilon_{y} = \\frac{\\partial u_y}{\\partial y} \\qquad
+\\gamma_{xy} = \\frac{\\partial u_y}{\\partial x} + \\frac{\\partial u_x}{\\partial y}
+\\end{align}
+ `;
+
+ let stress_strain = `
+\\begin{aligned}
+\\epsilon_x = \\frac{1}{E}(\\sigma_x - \\nu \\sigma_y) \\qquad
+\\epsilon_y = \\frac{1}{E}(\\sigma_y - \\nu \\sigma_x) \\qquad
+\\gamma_{xy} = \\frac{2(1 + \\nu)}{E}\\tau_{xy}
+\\end{aligned}
+`;
+
+
+ const e_x = {
+   "test" : [
+     `\\frac{\\partial \\epsilon_x}{\\partial y} = \\frac{\\partial^2 u_x}{\\partial x \\partial y}`,
+     `\\frac{\\partial^2 \\epsilon_x}{\\partial y^2} = \\frac{\\partial^3 u_x}{\\partial x \\partial y^2}`
+   ]
+ }
+
+ const y_x = {
+   "test": [
+     "thing1", "thing2"
+   ]
+ }
+
+
+ // Math equations
  let name = `\\epsilon_x`;
  let eq1 = `\\htmlClass{test}{\\epsilon_x} = \\frac{\\partial u_x}{\\partial u_y}`;
  let eq2 = `
-    \\begin{align} 
-    \\htmlClass{test}{\\epsilon_{x}} &= \\frac{\\partial u_x}{\\partial x} \\\\
-	  \\frac{\\partial \\epsilon_x}{\\partial y} &= \\frac{\\partial^2 u_x}{\\partial x \\partial y} \\\\
-	  \\frac{\\partial^2 \\epsilon_x}{\\partial y^2} &= \\frac{\\partial^3 u_x}{\\partial x \\partial y^2} \\\\
-	  \\end{align}
+   \\begin{align} 
+   \\htmlClass{test}{\\epsilon_{x}} &= \\frac{\\partial u_x}{\\partial x} \\\\
+   \\frac{\\partial \\epsilon_x}{\\partial y} &= \\frac{\\partial^2 u_x}{\\partial x \\partial y} \\\\
+   \\frac{\\partial^2 \\epsilon_x}{\\partial y^2} &= \\frac{\\partial^3 u_x}{\\partial x \\partial y^2} \\\\
+   \\end{align}
  `;
  let eq3 = `
 	  \\htmlClass{test}{\\epsilon_x} = \\frac{1}{E}(\\sigma_x - \\nu \\sigma_y)
  `;
  let eq4 = `
  \\htmlClass{test}{\\epsilon_{x}} = \\frac{\\partial u_x}{\\partial x} \\
-`;
-  let eq5 = `
+ `;
+ let eq5 = `
 \\frac{\\partial \\epsilon_x}{\\partial y} = \\frac{\\partial^2 u_x}{\\partial x \\partial y} \\
-`;
-  let eq6 = `
+ `;
+ let eq6 = `
 	  \\frac{\\partial^2 \\epsilon_x}{\\partial y^2} = \\frac{\\partial^3 u_x}{\\partial x \\partial y^2} \\
-`;
+ `;
+ let eqnArray = [
+   `\\htmlClass{test}{\\epsilon_{x}} = \\frac{\\partial u_x}{\\partial x}`,
+   `\\frac{\\partial \\epsilon_x}{\\partial y} = \\frac{\\partial^2 u_x}{\\partial x \\partial y}`,
+   `\\frac{\\partial^2 \\epsilon_x}{\\partial y^2} = \\frac{\\partial^3 u_x}{\\partial x \\partial y^2}`
+
+ ]
 </script>
 
 <main>
-	<h2>Strain Partial Relationship</h2>
+  <h1>Derivation of Airy's Stress Relationship with Biharmonic Equation</h1>
+	<h2>Strain Partial Derivative Relationship (From 2D Strain Block) </h2>
+  <Katex math={partial_strain} displayMode/>
+  <h2>Stress/Strain Relationships in 2D</h2>
+  <Katex math={stress_strain} displayMode/>
+  <h2>Differentiation of <Katex math="\epsilon_x" /></h2>
+  <!-- <Item entry={y_x} /> -->
+  <h2>Differentiation of <Katex math="\epsilon_y" /></h2>
+  <h2>Differentiation of <Katex math={"\\gamma_{xy}"} /></h2>
+  <h2>Substitution of Axial Strain into Shear Strain Equation</h2>
+  <h2>Airy's Stress Function Definition</h2>
+  <h2>Substitution of Airy's Stress Function into Stress/Strain Relationships</h2>
+  <h3><Katex math="\epsilon_x" /></h3>
+  <h3><Katex math="\epsilon_y" /></h3>
+  <h3><Katex math={"\\gamma_{xy}"} /></h3>
+  <h2>Biharmonic Equation</h2>
+
+
 	<p><Katex math={eq1} displayMode /> </p>
 	<h2>Differentiation of <Katex math={name} /></h2>
 	<p><Katex math={eq2} displayMode /></p>
 	<h2>Stress/Strain Relationships in 2D</h2>
-  <ul>
-	<li><Katex math={eq3} displayMode /></li>
-  <li style="display: none"><Katex math={eq4} displayMode /></li>
-  <li style="display: none"><Katex math={eq5} displayMode /></li>
-  <li><Katex math={eq6} displayMode /></li>
+  <ul style="list-style-type:none;">
+    {#each eqnArray as eqn, i}
+    <li><button><Katex math={eqn} displayMode/></button></li>
+    {/each}
   </ul>
 </main>
 
