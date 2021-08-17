@@ -75,7 +75,7 @@
    `\\frac{\\partial \\epsilon_x}{\\partial y} = \\frac{\\partial^2 u_x}{\\partial x \\partial y}`,
    `\\frac{\\partial^2 \\epsilon_x}{\\partial y^2} = \\frac{\\partial^3 u_x}{\\partial x \\partial y^2}`
  ]
- 
+
 </script>
 
 <main>
@@ -85,7 +85,7 @@
   <h2>Stress/Strain Relationships in 2D</h2>
   <Katex math={stress_strain} displayMode/>
   <h2>Differentiation of <Katex math="\epsilon_x" /></h2>
-  <Item entry={y_x.test} />
+  <Item entry={eqnArray} />
   <h2>Differentiation of <Katex math="\epsilon_y" /></h2>
   <h2>Differentiation of <Katex math={"\\gamma_{xy}"} /></h2>
   <h2>Substitution of Axial Strain into Shear Strain Equation</h2>

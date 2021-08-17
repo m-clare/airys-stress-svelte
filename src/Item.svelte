@@ -22,28 +22,30 @@
 
 	[aria-expanded=true] svg { transform: rotate(0.25turn); }
 </style>
-
-<button on:click={toggle}
-        aria-expanded={isOpen}>
-  <svg style="tran"
-       width="15"
-       height="15"
-       fill="none"
-       stroke-linecap="round"
-       stroke-linejoin="round"
-       stroke-width="1"
-       viewBox="0 0 24 24"
-       stroke="currentColor">
-    <path d="M9 5l7 7-7 7"></path>
-  </svg> {entry[0]}
-
-  <!-- <Katex math={entry[0]} displayMode /> -->
-</button>
+<span class="katex-display">
+  <button on:click={toggle}
+          style="display: block; width: 100%"
+          aria-expanded={isOpen}>
+    <!-- <svg style="tran" -->
+    <!--      width="15" -->
+    <!--      height="15" -->
+    <!--      fill="none" -->
+    <!--      stroke-linecap="round" -->
+    <!--      stroke-linejoin="round" -->
+    <!--      stroke-width="1" -->
+    <!--      viewBox="0 0 24 24" -->
+    <!--      stroke="currentColor"> -->
+    <!--   <path d="M9 5l7 7-7 7"></path> -->
+    <!-- </svg>  -->
+    
+    <Katex math={entry[0]} displayMode />
+  </button>
+</span>
 {#if isOpen}
 <ul style="list-style:none" transition:slide={{ duration: 300 }}>
-	{#each entry as item}
-	<!-- <li><Katex math={item} displayMode /></li> -->
-  <li> {item} </li>
+	{#each entry.slice(1) as item}
+	<li><Katex math={item} displayMode /></li>
+  <!-- <li> {item} </li> -->
 	{/each}
 </ul>
 {/if}
