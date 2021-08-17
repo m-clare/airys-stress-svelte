@@ -1,7 +1,7 @@
 <script>
  // import Component
  import Katex from "./Katex.svelte";
- import Item from "./Item.svelte";
+ import ShowFirstItem from "./ShowFirstItem.svelte";
  import { onMount } from "svelte";
  
  let hash = {}
@@ -20,63 +20,74 @@
  // Math Equations
  let partial_strain = `
 \\begin{align}
-\\epsilon_{x} = \\frac{\\partial u_x}{\\partial x} \\qquad
-\\epsilon_{y} = \\frac{\\partial u_y}{\\partial y} \\qquad
-\\gamma_{xy} = \\frac{\\partial u_y}{\\partial x} + \\frac{\\partial u_x}{\\partial y}
+\\htmlClass{ex}{\\epsilon_{x}} = \\frac{\\partial u_x}{\\partial x} \\qquad
+\\htmlClass{ey}{\\epsilon_{y}} = \\frac{\\partial u_y}{\\partial y} \\qquad
+\\htmlClass{gxy}{\\gamma_{xy}} = \\frac{\\partial u_y}{\\partial x} + \\frac{\\partial u_x}{\\partial y}
 \\end{align}
  `;
 
  let stress_strain = `
-\\begin{aligned}
-\\epsilon_x = \\frac{1}{E}(\\sigma_x - \\nu \\sigma_y) \\qquad
-\\epsilon_y = \\frac{1}{E}(\\sigma_y - \\nu \\sigma_x) \\qquad
-\\gamma_{xy} = \\frac{2(1 + \\nu)}{E}\\tau_{xy}
-\\end{aligned}
+\\begin{align}
+\\htmlClass{ex}{\\epsilon_x} = \\frac{1}{E}(\\sigma_x - \\nu \\sigma_y) \\qquad
+\\htmlClass{ey}{\\epsilon_y} = \\frac{1}{E}(\\sigma_y - \\nu \\sigma_x) \\qquad
+\\htmlClass{gxy}{\\gamma_{xy}} = \\frac{2(1 + \\nu)}{E}\\tau_{xy}
+\\end{align}
 `;
 
-
- const e_x = {
-   "test" : [
-     `\\frac{\\partial \\epsilon_x}{\\partial y} = \\frac{\\partial^2 u_x}{\\partial x \\partial y}`,
-     `\\frac{\\partial^2 \\epsilon_x}{\\partial y^2} = \\frac{\\partial^3 u_x}{\\partial x \\partial y^2}`
-   ]
- }
-
- const y_x = {
-   'test': [
-     0, 1
-   ]
- }
-
-
- // Math equations
- let name = `\\epsilon_x`;
- let eq1 = `\\htmlClass{test}{\\epsilon_x} = \\frac{\\partial u_x}{\\partial u_y}`;
- let eq2 = `
-   \\begin{align} 
-   \\htmlClass{test}{\\epsilon_{x}} &= \\frac{\\partial u_x}{\\partial x} \\\\
-   \\frac{\\partial \\epsilon_x}{\\partial y} &= \\frac{\\partial^2 u_x}{\\partial x \\partial y} \\\\
-   \\frac{\\partial^2 \\epsilon_x}{\\partial y^2} &= \\frac{\\partial^3 u_x}{\\partial x \\partial y^2} \\\\
-   \\end{align}
- `;
- let eq3 = `
-	  \\htmlClass{test}{\\epsilon_x} = \\frac{1}{E}(\\sigma_x - \\nu \\sigma_y)
- `;
- let eq4 = `
- \\htmlClass{test}{\\epsilon_{x}} = \\frac{\\partial u_x}{\\partial x} \\
- `;
- let eq5 = `
-\\frac{\\partial \\epsilon_x}{\\partial y} = \\frac{\\partial^2 u_x}{\\partial x \\partial y} \\
- `;
- let eq6 = `
-	  \\frac{\\partial^2 \\epsilon_x}{\\partial y^2} = \\frac{\\partial^3 u_x}{\\partial x \\partial y^2} \\
- `;
- let eqnArray = [
-   `\\htmlClass{test}{\\epsilon_{x}} = \\frac{\\partial u_x}{\\partial x}`,
+ let epsilon_x_diff = [
+   `\\epsilon_{x} = \\frac{\\partial u_x}{\\partial x}`,
    `\\frac{\\partial \\epsilon_x}{\\partial y} = \\frac{\\partial^2 u_x}{\\partial x \\partial y}`,
    `\\frac{\\partial^2 \\epsilon_x}{\\partial y^2} = \\frac{\\partial^3 u_x}{\\partial x \\partial y^2}`
  ]
 
+ let epsilon_y_diff = [
+   `\\epsilon_{y} = \\frac{\\partial u_y}{\\partial y}`,
+   `\\frac{\\partial \\epsilon_y}{\\partial x} = \\frac{\\partial^2 u_y}{\\partial y \\partial x}`,
+   `\\frac{\\partial^2 \\epsilon_y}{\\partial x^2} = \\frac{\\partial^3 u_y}{\\partial y \\partial x^2}`
+ ]
+
+ let gamma_xy_diff = [
+   `\\gamma_{xy} = \\frac{\\partial u_y}{\\partial x} + \\frac{\\partial u_x}{\\partial y}`,
+   `\\frac{\\partial \\gamma_{xy}}{\\partial x} = \\frac{\\partial^2 u_y}{\\partial x^2} + \\frac{\\partial^2 u_x}{\\partial x \\partial y}`,
+   `\\frac{\\partial^2 \\gamma_{xy}}{\\partial x \\partial y} = \\frac{\\partial^3 u_y}{\\partial x^2 \\partial y} + \\frac{\\partial^3 u_x}{\\partial x \\partial y^2}`
+ ]
+
+ let axial_shear_sub = `
+\\begin{aligned}
+\\frac{\\partial^2 \\gamma_{xy}}{\\partial x \\partial y} &= \\frac{\\partial^3 u_y}{\\partial x^2 \\partial y} + \\frac{\\partial^3 u_x}{\\partial x \\partial y^2} \\\\
+\\frac{\\partial^2 \\gamma_{xy}}{\\partial x \\partial y} &= \\frac{\\partial^2 \\epsilon_y}{\\partial x^2} + \\frac{\\partial^2 \\epsilon_x}{\\partial y^2} 
+\\end{aligned}
+ `
+
+ let airys_func = `
+\\begin{aligned}
+\\sigma_x = \\frac{\\partial^2 \\phi}{\\partial y^2} \\qquad 
+\\sigma_y = \\frac{\\partial^2 \\phi}{\\partial x^2} \\qquad
+\\tau_{xy} = -\\frac{\\partial^2 \\phi}{\\partial x \\partial y}
+\\end{aligned}
+`
+
+let epsilon_x_sub = [
+  `\\epsilon_x = \\frac{1}{E}\\left(\\frac{\\partial^2 \\phi}{\\partial y^2} - \\nu\\frac{\\partial^2 \\phi}{\\partial x^2}\\right)`,
+  `\\frac{\\partial \\epsilon_x}{\\partial y} = \\frac{1}{E} \\left(\\frac{\\partial^3 \\phi}{\\partial y^3} - \\nu \\frac{\\partial^3\\phi}{\\partial x^2 \\partial y}\\right)`,
+  `\\frac{\\partial^2 \\epsilon_x}{\\partial y^2} = \\frac{1}{E} \\left(\\frac{\\partial^4 \\phi}{\\partial y^4} - \\nu \\frac{\\partial ^4 \\phi}{\\partial x^2 \\partial y^2}\\right)`
+]
+
+let epsilon_y_sub = [
+  `\\epsilon_y = \\frac{1}{E}\\left(\\frac{\\partial^2 \\phi}{\\partial x^2} - \\nu\\frac{\\partial^2 \\phi}{\\partial y^2}\\right)`,
+  `\\frac{\\partial \\epsilon_y}{\\partial x} = \\frac{1}{E} \\left(\\frac{\\partial^3 \\phi}{\\partial x^3} - \\nu \\frac{\\partial^3\\phi}{\\partial y^2 \\partial x}\\right)`,
+ `\\frac{\\partial^2 \\epsilon_y}{\\partial x^2} = \\frac{1}{E} \\left(\\frac{\\partial^4 \\phi}{\\partial x^4} - \\nu \\frac{\\partial ^4 \\phi}{\\partial y^2 \\partial x^2}\\right)`
+]
+
+let gamma_xy_sub = [
+  `\\gamma_{xy} = \\frac{2(1 + \\nu)}{E}\\left(-\\frac{\\partial^2 \\phi}{\\partial x \\partial y}\\right)`,
+  `\\frac{\\partial \\gamma_{xy}}{\\partial x} =  \\frac{2(1 + \\nu)}{E}\\left(-\\frac{\\partial^3 \\phi}{\\partial x^2 \\partial y}\\right)`,
+  `\\frac{\\partial^2 \\gamma_{xy}}{\\partial x \\partial y} = \\frac{2(1 + \\nu)}{E}\\left(-\\frac{\\partial^4 \\phi}{\\partial x^2 \\partial y^2}\\right)`
+]
+
+let biharmonic_eqn =`
+\\nabla^4\\phi = \\frac{\\partial^4 \\phi}{\\partial x^4} + 2 \\frac{\\partial^4 \\phi}{\\partial x^2 \\partial y^2} + \\frac{\\partial^4 \\phi}{\\partial y^4} = 0
+`
 </script>
 
 <main>
@@ -86,9 +97,11 @@
   <h2>Stress/Strain Relationships in 2D</h2>
   <Katex math={stress_strain} displayMode/>
   <h2>Differentiation of <Katex math="\epsilon_x" /></h2>
-  <Item entry={eqnArray} />
+  <ShowFirstItem entry={epsilon_x_diff} />
   <h2>Differentiation of <Katex math="\epsilon_y" /></h2>
+  <ShowFirstItem entry={epsilon_y_diff} />
   <h2>Differentiation of <Katex math={"\\gamma_{xy}"} /></h2>
+  <ShowFirstItem entry={gamma_xy_diff} />
   <h2>Substitution of Axial Strain into Shear Strain Equation</h2>
   <h2>Airy's Stress Function Definition</h2>
   <h2>Substitution of Airy's Stress Function into Stress/Strain Relationships</h2>
@@ -96,17 +109,6 @@
   <h3><Katex math="\epsilon_y" /></h3>
   <h3><Katex math={"\\gamma_{xy}"} /></h3>
   <h2>Biharmonic Equation</h2>
-
-
-	<p><Katex math={eq1} displayMode /> </p>
-	<h2>Differentiation of <Katex math={name} /></h2>
-	<p><Katex math={eq2} displayMode /></p>
-	<h2>Stress/Strain Relationships in 2D</h2>
-  <ul style="list-style-type:none;">
-    {#each eqnArray as eqn, i}
-    <li><button><Katex math={eqn} displayMode/></button></li>
-    {/each}
-  </ul>
 </main>
 
 <style>
@@ -129,7 +131,7 @@
 			   max-width: 500px;
 		 }
  }
- :global(.test.hovered) {
-   background-color: red
+ :global(.hovered) {
+   color: red
  }
 </style>
