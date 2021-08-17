@@ -3,6 +3,7 @@
  import Katex from "./Katex.svelte";
  import Item from "./Item.svelte";
  import { onMount } from "svelte";
+ 
  let hash = {}
 
  onMount(() => {
