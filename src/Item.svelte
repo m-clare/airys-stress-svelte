@@ -35,12 +35,15 @@
        viewBox="0 0 24 24"
        stroke="currentColor">
     <path d="M9 5l7 7-7 7"></path>
-  </svg> <Katex math={entry[0]} displayMode />
+  </svg> {entry[0]}
+
+  <!-- <Katex math={entry[0]} displayMode /> -->
 </button>
 {#if isOpen}
 <ul style="list-style:none" transition:slide={{ duration: 300 }}>
-	{#each entry[1] as item}
-	<li><Katex math={item} displayMode /></li>
+	{#each entry as item}
+	<!-- <li><Katex math={item} displayMode /></li> -->
+  <li> {item} </li>
 	{/each}
 </ul>
 {/if}
